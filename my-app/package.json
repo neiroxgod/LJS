@@ -11,10 +11,14 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/icon": "^1.0.0",
+    "@vueuse/core": "^10.11.0",
+    "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.408.0",
     "nuxt": "^3.12.3",
+    "nuxt-tiptap-editor": "^1.1.2",
     "radix-vue": "^1.9.1",
     "shadcn-nuxt": "^0.10.4",
     "tailwind-merge": "^2.4.0",

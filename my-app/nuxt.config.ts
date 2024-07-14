@@ -3,9 +3,14 @@ export default defineNuxtConfig({
   devServer: {
     port: 8080,
   },
+  runtimeConfig: {
+    public: {
+      baseURL: 'http://localhost:3000/'
+    }
+  },
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt"],
+  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxt/icon", "nuxt-tiptap-editor"],
   shadcn: {
         /**
        * Prefix for all the imported component
@@ -16,5 +21,8 @@ export default defineNuxtConfig({
          * @default "./components/ui"
          */
         componentDir: './components/ui'
-  }
+  },
+  tiptap: {
+    prefix: "Tiptap", //prefix for Tiptap imports, composables not included
+  },
 })
