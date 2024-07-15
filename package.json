@@ -13,7 +13,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@ckeditor/ckeditor5-vue": "^6.0.0",
     "@fastify/autoload": "^5.10.0",
+    "ckeditor5": "^42.0.1",
+    "ckeditor5-premium-features": "^42.0.1",
     "concurrently": "^8.2.2"
   }
 }
