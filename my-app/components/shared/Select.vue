@@ -27,10 +27,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-  defineProps({
+  const props = defineProps({
     options: Array,
     label: String,
     placeholder: String,
   })
-
+  
 </script>

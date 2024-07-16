@@ -1,6 +1,6 @@
 export default async function (fastify, opts) {
 
-  fastify.get('/content/:id', async function (request, reply) {
+  fastify.get('/content/get/:id', async function (request, reply) {
     try {
       const client = await fastify.pg.connect();
       try {
@@ -30,8 +30,10 @@ export default async function (fastify, opts) {
   })
 
   fastify.post('/content/add', async function (request, reply) {
-    const { content_title, content_description, content_text, timeadd, tag, tag_object } = request.body;
-
+    let { content_title, content_description, content_text, tag, tag_object } = request.body;
+    content_text = '<div class="tiptap">'+content_text+'</div>';
+    const timeadd = new Date();
+    const client = await fastify.pg.connect();
     try {
       const res = await client.query(
         'INSERT INTO "ContentTable" (content_title, content_description, content_text, timeadd, tag, tag_object) VALUES (\$1, \$2, \$3, \$4, \$5, \$6) RETURNING *',
@@ -48,7 +50,7 @@ export default async function (fastify, opts) {
   fastify.put('/content/update/:id', async (request, reply) => {
     const { id } = request.params;
     const { content_title, content_description, content_text, timeadd, tag, tag_object } = request.body;
-  
+    const client = await fastify.pg.connect();
     try {
       const res = await client.query(
         'UPDATE "ContentTable" SET content_title = \$1, content_description = \$2, content_text = \$3, timeadd = \$4, tag = \$5, tag_object = \$6 WHERE id = \$7 RETURNING *',
@@ -68,10 +70,11 @@ export default async function (fastify, opts) {
 
   fastify.delete('/content/delete/:id', async (request, reply) => {
     const { id } = request.params;
-  
+    console.log(id);
+    const client = await fastify.pg.connect();
     try {
       const res = await client.query(
-        'DELETE FROM "ContentTable" WHERE id = \$1 RETURNING *',
+        'DELETE FROM "ContentTable" WHERE content_id = \$1 RETURNING *',
         [id]
       );
       if (res.rowCount === 0) {

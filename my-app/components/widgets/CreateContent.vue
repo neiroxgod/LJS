@@ -1,13 +1,4 @@
 <script setup lang="ts">
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogDescription,
-//   DialogFooter,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-// } from '@/components/ui/dialog'
 
 const TAGS_OBJECT = [
   {
@@ -60,10 +51,30 @@ const TAGS = [
   },
 ]
 
+const FormData = ref({
+    content_title: '',
+    content_description: '',
+    content_text: '',
+    tag: '',
+    tag_object: '',
+})
+
+const emit = defineEmits(['added:content']);
+
+const submitCreateContent = () => {
+  const request = useFetch('http://127.0.0.1:3000/content/add', {
+    method: 'POST',
+    body: FormData,
+  })
+
+  emit('added:content');
+  console.log(request);
+}
+
 </script>
 
 <template>
-  <Dialog >
+  <Dialog class="">
     
     <DialogTrigger class="fixed right-20">
       <Button variant="default" class="border hover:bg-white hover:text-slate-900">
@@ -71,35 +82,36 @@ const TAGS = [
       </Button>
     </DialogTrigger>
 
-    <DialogContent class="bg-slate-800 border-0 shadow-xl shadow-slate-900">
+    <DialogContent class="text-white bg-slate-800 border-0 w-full shadow-xl shadow-slate-900">
       <DialogHeader>
         <DialogTitle class="text-slate-200 mb-3">Создать статью</DialogTitle>
         <DialogDescription>
           <div class="flex justify-between mb-2">
             <div class="w-full mr-2">
               <Label>Название статьи</Label>
-              <Input type="text" placeholder="Введите что нибудь)"/>
+              <Input type="text" v-model="FormData.content_title" placeholder="Введите что нибудь)"/>
             </div>
             <div class="w-full">
               <Label>Описание статьи</Label>
-              <Input type="text" placeholder="Введите что нибудь)"/>
+              <Input type="text" v-model="FormData.content_description" placeholder="Введите что нибудь)"/>
             </div>
           </div>
           <div class="flex justify-between">
             <div class="w-full mr-2">
               <Label>Тэги</Label>
-              <SharedSelect label="Теги" placeholder="Укажите тэг" :options="TAGS"/>
+              <SharedSelect v-model="FormData.tag" label="Теги" placeholder="Укажите тэг" :options="TAGS"/>
             </div>
             <div class="w-full">
               <Label>Направление</Label>
-              <SharedSelect label="Направление" placeholder="Укажите направление" :options="TAGS_OBJECT" />
+              <SharedSelect v-model="FormData.tag_object" label="Направление" placeholder="Укажите направление" :options="TAGS_OBJECT" />
             </div>
           </div>
         </DialogDescription>
+        <WidgetsTipTapEditor v-model="FormData.content_text"/>
       </DialogHeader>
 
       <DialogFooter>
-        <Button>Создать</Button>
+        <Button class="text-slate-900" @click="submitCreateContent" variant="outline">Создать</Button>
       </DialogFooter>
 
     </DialogContent>
