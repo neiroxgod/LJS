@@ -1,26 +1,21 @@
 <template>
-  <WidgetContentCard @update:list="fetchContentList" v-if="data" :items="data" title="Тест" content="Тест"/>
+  <WidgetContentCard v-if="data" :items="data" title="Тест" content="Тест"/>
 </template>
 
-<script setup> 
+<script setup lang="ts"> 
 
-import WidgetContentCard from '../widgets/ContentCard.vue'
+  import WidgetContentCard from '../widgets/ContentCard.vue'
 
-let data = await useMyFetch('/content/list');
+  const props = defineProps({
+    content: Object,
+  })
 
-const props = defineProps({
-  content: String,
-})
+  const data = ref(await useMyFetch('/content/list'))
 
-
-const fetchContentList = async function () {
-  console.log('fetch_used');
-  let data = await useMyFetch('/content/list');
-  // console.log(data);
-}
-
-onMounted(() => {
-  fetchContentList();
-});
-
+  watch(() => props.content, (newContent) => {
+     if (newContent) {
+       data.value.data.push(newContent);
+       console.log(data.value.data);
+     }
+  });
 </script>

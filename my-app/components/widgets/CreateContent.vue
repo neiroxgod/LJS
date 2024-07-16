@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const TAGS_OBJECT = [
   {
     alias: 'JS',
@@ -26,7 +25,7 @@ const TAGS_OBJECT = [
     value: 'vscode-icons:file-type-jenkins',
     icon: 'vscode-icons:file-type-jenkins',
   },
-]
+];
 
 const TAGS = [
   {
@@ -49,71 +48,79 @@ const TAGS = [
     alias: 'SOFT',
     value: 'SOFT',
   },
-]
+];
 
 const FormData = ref({
-    content_title: '',
-    content_description: '',
-    content_text: '',
-    tag: '',
-    tag_object: '',
-})
+  content_title: '',
+  content_description: '',
+  content_text: '',
+  tag: '',
+  tag_object: '',
+});
 
 const emit = defineEmits(['added:content']);
 
-const submitCreateContent = () => {
-  const request = useFetch('http://127.0.0.1:3000/content/add', {
+const OPEN_MODAL = ref(false);
+
+const submitCreateContent = async () => {
+  const {data, pending, error} = await useFetch('http://127.0.0.1:3000/content/add', {
     method: 'POST',
     body: FormData,
   })
 
-  emit('added:content');
-  console.log(request);
-}
+  console.log(data.value);
+  emit('added:content', data.value);
 
+  OPEN_MODAL.value = false;
+};
 </script>
 
 <template>
   <Dialog class="">
-    
     <DialogTrigger class="fixed right-20">
       <Button variant="default" class="border hover:bg-white hover:text-slate-900">
         Добавить <Icon class="ml-2 align-middle" name="grommet-icons:add" color="white" />
       </Button>
     </DialogTrigger>
 
-    <DialogContent class="text-white bg-slate-800 border-0 w-full shadow-xl shadow-slate-900">
+    <DialogContent v-model:open="OPEN_MODAL" class="w-full border-0 bg-slate-800 text-white shadow-xl shadow-slate-900">
       <DialogHeader>
-        <DialogTitle class="text-slate-200 mb-3">Создать статью</DialogTitle>
+        <DialogTitle class="mb-3 text-slate-200">Создать статью</DialogTitle>
         <DialogDescription>
-          <div class="flex justify-between mb-2">
-            <div class="w-full mr-2">
+          <div class="mb-2 flex justify-between">
+            <div class="mr-2 w-full">
               <Label>Название статьи</Label>
-              <Input type="text" v-model="FormData.content_title" placeholder="Введите что нибудь)"/>
+              <Input type="text" v-model="FormData.content_title" placeholder="Введите что нибудь)" />
             </div>
             <div class="w-full">
               <Label>Описание статьи</Label>
-              <Input type="text" v-model="FormData.content_description" placeholder="Введите что нибудь)"/>
+              <Input type="text" v-model="FormData.content_description" placeholder="Введите что нибудь)" />
             </div>
           </div>
           <div class="flex justify-between">
-            <div class="w-full mr-2">
+            <div class="mr-2 w-full">
               <Label>Тэги</Label>
-              <SharedSelect v-model="FormData.tag" label="Теги" placeholder="Укажите тэг" :options="TAGS"/>
+              <SharedSelect v-model="FormData.tag" label="Теги" placeholder="Укажите тэг" :options="TAGS" />
             </div>
             <div class="w-full">
               <Label>Направление</Label>
-              <SharedSelect v-model="FormData.tag_object" label="Направление" placeholder="Укажите направление" :options="TAGS_OBJECT" />
+              <SharedSelect
+                v-model="FormData.tag_object"
+                label="Направление"
+                placeholder="Укажите направление"
+                :options="TAGS_OBJECT"
+              />
             </div>
           </div>
         </DialogDescription>
-        <WidgetsTipTapEditor v-model="FormData.content_text"/>
+        <WidgetsTipTapEditor v-model="FormData.content_text" />
       </DialogHeader>
 
       <DialogFooter>
-        <Button class="text-slate-900" @click="submitCreateContent" variant="outline">Создать</Button>
+        <DialogClose as-child>
+          <Button class="text-slate-900" @click="submitCreateContent" variant="outline">Создать</Button>
+        </DialogClose>
       </DialogFooter>
-
     </DialogContent>
   </Dialog>
 </template>
